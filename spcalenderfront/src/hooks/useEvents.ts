@@ -1,32 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { fetchEvents } from '@src/api/events';
 import { IEvent, IFilters } from '@src/types/events';
 
-export const useEvents = (filters: IFilters) => {
-    // Убедитесь, что пустые значения фильтров исключены
-    const sanitizedFilters = Object.fromEntries(
+export const useEvents = (filters: IFilters): UseQueryResult<IEvent[], Error> => {
+    // Очистка фильтров
+    const sanitizedFilters: Partial<IFilters> = Object.fromEntries(
         Object.entries(filters).filter(([_, value]) => value !== undefined && value !== '')
-    ) as IFilters;
+    ) as Partial<IFilters>;
 
     const queryKey = ['events', sanitizedFilters];
 
-    const {
-        data,
-        error,
-        isLoading,
-        isError,
-        isSuccess,
-    } = useQuery<IEvent[], Error>({
+    const options: UseQueryOptions<IEvent[], Error, IEvent[]> = {
         queryKey,
         queryFn: () => fetchEvents(sanitizedFilters),
-        keepPreviousData: true,
-    });
-
-    return {
-        events: data || [],
-        isLoading,
-        isError,
-        isSuccess,
-        error,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     };
+
+    const queryResult = useQuery<IEvent[], Error>(options);
+
+    return queryResult;
 };
