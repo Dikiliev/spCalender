@@ -22,6 +22,12 @@ if DEBUG:
 
 AUTH_USER_MODEL = 'users.User'
 
+EMAIL_HOST_USER = 'workesta@mail.ru'
+EMAIL_HOST_PASSWORD = '4TeSqRQvBaQ55SSEGfhA'
+
+
+
+
 INSTALLED_APPS = [
     # 'jazzmin',
 

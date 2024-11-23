@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/events/', include('events.urls')),
+    path('api/notifications/', include('notifications.urls')),
 
     # path('jet_api/', include('jet_django.urls')),
 ]

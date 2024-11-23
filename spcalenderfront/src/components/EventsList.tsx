@@ -8,13 +8,21 @@ interface EventsListProps {
     events: IEvent[];
     isLoading: boolean;
     error: Error | null;
+    successMessage?: string; // Опциональное сообщение при успешной загрузке
+    noEventsMessage?: string; // Сообщение, если мероприятий нет
 }
 
-const EventsList: React.FC<EventsListProps> = ({ events, isLoading, error }) => {
+const EventsList: React.FC<EventsListProps> = ({
+                                                   events,
+                                                   isLoading,
+                                                   error,
+                                                   successMessage = "Мероприятия успешно загружены.",
+                                                   noEventsMessage = "Мероприятия не найдены.",
+                                               }) => {
     if (isLoading) {
         return (
             <Box textAlign="center" py={4}>
-                <LoadingBox/>
+                <LoadingBox />
                 <Typography variant="h6" color="textSecondary">
                     Загрузка...
                 </Typography>
@@ -36,20 +44,29 @@ const EventsList: React.FC<EventsListProps> = ({ events, isLoading, error }) => 
         return (
             <Box textAlign="center" py={4}>
                 <Typography variant="h6" color="textSecondary">
-                    Мероприятия не найдены.
+                    {noEventsMessage}
                 </Typography>
             </Box>
         );
     }
 
     return (
-        <Grid container spacing={2}>
-            {events.map((event) => (
-                <Grid item xs={12} sm={6} md={4} key={event.id}>
-                    <EventCard event={event} />
-                </Grid>
-            ))}
-        </Grid>
+        <Box>
+            {/* Сообщение об успешной загрузке */}
+            <Box textAlign="center" py={2}>
+                <Typography variant="h6" color="primary">
+                    {successMessage}
+                </Typography>
+            </Box>
+
+            <Grid container spacing={2}>
+                {events.map((event) => (
+                    <Grid item xs={12} sm={6} md={4} key={event.id}>
+                        <EventCard event={event} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Box>
     );
 };
 

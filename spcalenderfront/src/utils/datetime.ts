@@ -9,3 +9,9 @@ export function toDatetime(from: string){
         hour12: false, // Использовать 24-часовой формат
     }).format(new Date(from))
 }
+
+export const formatDateToISO = (daysBefore: number): string => {
+    const notifyDate = new Date();
+    notifyDate.setDate(notifyDate.getDate() - daysBefore);
+    return notifyDate.toISOString(); // Преобразует в формат ISO 8601
+};
