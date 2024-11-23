@@ -23,10 +23,16 @@ export interface IEvent {
     last_updated: string; // ISO-формат даты обновления
 }
 
-// Интерфейс для фильтров
+
 export interface IFilters {
-    sportType?: string; // Необязательный параметр
-    startDate?: string; // ISO-формат даты
-    endDate?: string; // ISO-формат даты
-    location?: string; // Фильтрация по местоположению
+    sportType?: string; // Тип спорта
+    startDate?: string; // Дата начала (диапазон)
+    endDate?: string; // Дата окончания (диапазон)
+    location?: string; // Местоположение
+    participantsMin?: number; // Минимальное количество участников
+    participantsMax?: number; // Максимальное количество участников
+    gender?: 'male' | 'female' | 'mixed'; // Пол
+    ageGroup?: string; // Возрастная группа
+    isCancelled?: boolean; // Отменённые события
+    ordering?: string; // Порядок сортировки (start_date, -participants и т.д.)
 }

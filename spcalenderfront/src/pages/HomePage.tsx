@@ -1,37 +1,76 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import {Box, Container, Paper, Typography} from '@mui/material';
 import { useEvents } from '@src/hooks/useEvents';
 import { IFilters } from '@src/types/events';
-import EventFilters from "@components/EventFilters";
-import EventsList from "@components/EventsList";
+import EventsList from '@components/EventsList';
+import { saveToStorage, loadFromStorage } from '@src/utils/storage';
+import FiltersPanel from "@components/FiltersPanel";
+
+const FILTERS_STORAGE_KEY = 'user_event_filters';
 
 const HomePage: React.FC = () => {
-    const [filters, setFilters] = useState<IFilters>({
-        sportType: '',
-        startDate: '',
-        location: '',
+    const [filters, setFilters] = useState<IFilters>(() => {
+        return loadFromStorage<IFilters>(FILTERS_STORAGE_KEY) || {
+            sportType: '',
+            startDate: '',
+            endDate: '',
+            location: '',
+            participantsMin: undefined,
+            participantsMax: undefined,
+            gender: undefined,
+            ageGroup: '',
+            isCancelled: undefined,
+            ordering: '',
+        };
     });
+
+    React.useEffect(() => {
+        saveToStorage(FILTERS_STORAGE_KEY, filters);
+    }, [filters]);
 
     const { data: events, isLoading, error } = useEvents(filters);
 
+    const resetFilters = () => {
+        setFilters({
+            sportType: '',
+            startDate: '',
+            endDate: '',
+            location: '',
+            participantsMin: undefined,
+            participantsMax: undefined,
+            gender: undefined,
+            ageGroup: '',
+            isCancelled: undefined,
+            ordering: '',
+        });
+    };
+
     return (
-        <Box p={2} sx={{ maxWidth: '1200px', margin: 'auto' }}>
-            {/* Заголовок */}
-            <Box mb={4} textAlign="center">
-                <Typography variant="h4" fontWeight="bold">
-                    Календарь мероприятий
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                    Найдите ближайшие спортивные события
-                </Typography>
+        <Container maxWidth='xl' sx={{ display: 'flex', mt: 4 }}>
+            {/* Контентная область */}
+            <Box flex="1">
+                <Paper elevation={3} sx={{ p: 2 }}>
+                    <Box mb={4}>
+                        <Typography variant="h4" fontWeight="bold">
+                            Календарь мероприятий
+                        </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            Найдите ближайшие спортивные события
+                        </Typography>
+                    </Box>
+
+                    {/* Список событий */}
+                    <EventsList events={events || []} isLoading={isLoading} error={error} />
+                </Paper>
             </Box>
 
-            {/* Фильтры */}
-            <EventFilters filters={filters} onFiltersChange={setFilters} />
-
-            {/* Список событий */}
-            <EventsList events={events || []} isLoading={isLoading} error={error} />
-        </Box>
+            {/* Боковая панель фильтров */}
+            <FiltersPanel
+                filters={filters}
+                onFiltersChange={setFilters}
+                onResetFilters={resetFilters}
+            />
+        </Container>
     );
 };
 

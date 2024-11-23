@@ -1,36 +1,43 @@
 import React from 'react';
-import { Box, TextField, MenuItem, Button, Paper, Stack } from '@mui/material';
+import {
+    Drawer,
+    Box,
+    Typography,
+    TextField,
+    MenuItem,
+    Button,
+    Divider,
+    Stack,
+} from '@mui/material';
 import { IFilters } from '@src/types/events';
 
-interface EventFiltersProps {
+interface FiltersDrawerProps {
+    open: boolean;
+    onClose: () => void;
     filters: IFilters;
     onFiltersChange: (filters: IFilters) => void;
+    onResetFilters: () => void;
 }
 
-const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange }) => {
+const FiltersDrawer: React.FC<FiltersDrawerProps> = ({
+                                                         open,
+                                                         onClose,
+                                                         filters,
+                                                         onFiltersChange,
+                                                         onResetFilters,
+                                                     }) => {
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         onFiltersChange({ ...filters, [e.target.name]: e.target.value });
     };
 
-    const resetFilters = () => {
-        onFiltersChange({
-            sportType: '',
-            startDate: '',
-            endDate: '',
-            location: '',
-            participantsMin: undefined,
-            participantsMax: undefined,
-            gender: 'mixed',
-            ageGroup: '',
-            isCancelled: undefined,
-            ordering: '',
-        });
-    };
-
     return (
-        <Paper sx={{ p: 2, mb: 2 }}>
-            <Stack spacing={2}>
-                <Box display="flex" gap={2} flexWrap="wrap">
+        <Drawer anchor="right" open={open} onClose={onClose}>
+            <Box p={2} sx={{ width: 300 }}>
+                <Typography variant="h6" fontWeight="bold" mb={2}>
+                    Фильтры
+                </Typography>
+
+                <Stack spacing={2}>
                     <TextField
                         label="Вид спорта"
                         select
@@ -39,7 +46,6 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         onChange={handleFilterChange}
                         variant="outlined"
                         size="small"
-                        sx={{ minWidth: '200px' }}
                     >
                         <MenuItem value="">Все виды спорта</MenuItem>
                         <MenuItem value="basketball">Баскетбол</MenuItem>
@@ -77,9 +83,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         variant="outlined"
                         size="small"
                     />
-                </Box>
 
-                <Box display="flex" gap={2} flexWrap="wrap">
                     <TextField
                         label="Минимум участников"
                         type="number"
@@ -108,7 +112,6 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         onChange={handleFilterChange}
                         variant="outlined"
                         size="small"
-                        sx={{ minWidth: '200px' }}
                     >
                         <MenuItem value="">Любой</MenuItem>
                         <MenuItem value="male">Мужской</MenuItem>
@@ -124,33 +127,16 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         variant="outlined"
                         size="small"
                     />
-                </Box>
 
-                <Box display="flex" gap={2} flexWrap="wrap">
-                    <TextField
-                        label="Сортировка"
-                        select
-                        name="ordering"
-                        value={filters.ordering || ''}
-                        onChange={handleFilterChange}
-                        variant="outlined"
-                        size="small"
-                        sx={{ minWidth: '200px' }}
-                    >
-                        <MenuItem value="">По умолчанию</MenuItem>
-                        <MenuItem value="start_date">Дата начала</MenuItem>
-                        <MenuItem value="-start_date">Дата начала (обратный)</MenuItem>
-                        <MenuItem value="participants">Количество участников</MenuItem>
-                        <MenuItem value="-participants">Количество участников (обратный)</MenuItem>
-                    </TextField>
-                </Box>
+                    <Divider />
 
-                <Button variant="contained" onClick={resetFilters}>
-                    Сбросить
-                </Button>
-            </Stack>
-        </Paper>
+                    <Button variant="contained" onClick={onResetFilters} fullWidth>
+                        Сбросить
+                    </Button>
+                </Stack>
+            </Box>
+        </Drawer>
     );
 };
 
-export default EventFilters;
+export default FiltersDrawer;
