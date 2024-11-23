@@ -13,17 +13,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'id',
-            'title',
-            'sport_type',
-            'location',
-            'start_date',
-            'end_date',
-            'participants',
-            'gender',
-            'age_group',
-            'event_type',
-            'description',
-            'is_cancelled',
-            'last_updated',
+            'id', 'title', 'sport_type', 'country', 'region', 'city',
+            'location', 'start_date', 'end_date', 'participants',
+            'gender', 'age_group', 'event_type', 'description', 'program', 'is_cancelled'
         ]

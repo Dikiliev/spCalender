@@ -14,6 +14,8 @@ import LoginPage from "@pages/loginPage/LoginPage";
 import RegisterPage from "@pages/auth/registerPage/RegisterPage";
 import Logout from "@pages/auth/Logout";
 import HomePage from "@pages/HomePage";
+import React from "react";
+import StatisticsPage from "@pages/statistics/StatisticsPage";
 
 const BaseLayout: React.FC = () => {
     const location = useLocation();
@@ -38,6 +40,8 @@ const App: React.FC = () => {
                     <Route path='/' element={<BaseLayout />}>
 
                         <Route path='/' element={<HomePage />} />
+                        <Route path="/statistics" element={<StatisticsPage />} />
+
                         <Route path='profile' element={<ProfilePage />} />
                         <Route path='login' element={<LoginPage />} />
                         <Route path='register' element={<RegisterPage />} />

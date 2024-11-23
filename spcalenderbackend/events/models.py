@@ -17,7 +17,10 @@ class Event(models.Model):
 
     title = models.CharField(max_length=255)
     sport_type = models.ForeignKey(SportType, on_delete=models.CASCADE)
-    location = models.CharField(max_length=255)
+    country = models.CharField(max_length=100, default='')
+    region = models.CharField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='')
+    location = models.CharField(max_length=255, default='')
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     participants = models.PositiveIntegerField()
