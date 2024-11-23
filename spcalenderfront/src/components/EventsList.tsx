@@ -16,7 +16,6 @@ const EventsList: React.FC<EventsListProps> = ({
                                                    events,
                                                    isLoading,
                                                    error,
-                                                   successMessage = "Мероприятия успешно загружены.",
                                                    noEventsMessage = "Мероприятия не найдены.",
                                                }) => {
     if (isLoading) {
@@ -52,12 +51,7 @@ const EventsList: React.FC<EventsListProps> = ({
 
     return (
         <Box>
-            {/* Сообщение об успешной загрузке */}
-            <Box textAlign="center" py={2}>
-                <Typography variant="h6" color="primary">
-                    {successMessage}
-                </Typography>
-            </Box>
+
 
             <Grid container spacing={2}>
                 {events.map((event) => (

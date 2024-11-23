@@ -9,12 +9,14 @@ import {
     Checkbox,
     TextField,
     Stack,
-    Typography,
+    Typography, Box,
 } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { createNotification } from '@src/api/notifications';
 import dayjs, { Dayjs } from 'dayjs';
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface NotificationsModalProps {
     eventId: number;
@@ -74,7 +76,7 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({ eventId, startD
             <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
                 <DialogTitle>Управление уведомлениями</DialogTitle>
                 <DialogContent>
-                    <Stack spacing={2}>
+                    <Stack>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -103,21 +105,28 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({ eventId, startD
                             label="В день события"
                         />
 
-                        <Typography>Кастомные уведомления:</Typography>
-                        {customNotifications.map((time, index) => (
-                            <Stack direction="row" spacing={2} key={index} alignItems="center">
-                                <DateTimePicker
-                                    label="Дата и время"
-                                    value={time}
-                                    onChange={(value) => handleCustomNotificationChange(index, value)}
-                                    ampm={false}
-                                    renderInput={(params) => <TextField {...params} size="small" />}
-                                />
-                                <Button color="error" onClick={() => handleRemoveCustomNotification(index)}>
-                                    Удалить
-                                </Button>
-                            </Stack>
-                        ))}
+                        { customNotifications.length > 0 && (
+                            <Box>
+                                <Typography sx={{ mb: 2 }}>Кастомные уведомления:</Typography>
+                                {customNotifications.map((time, index) => (
+                                    <Stack direction="row" spacing={2} key={index} alignItems="center" sx={{ my: 2}}>
+                                        <DateTimePicker
+                                            label="Дата и время"
+                                            value={time}
+                                            onChange={(value) => handleCustomNotificationChange(index, value)}
+                                            ampm={false}
+                                            renderInput={(params) => <TextField {...params} size="small" />}
+                                        />
+                                        <IconButton
+                                            color="error"
+                                            onClick={() => handleRemoveCustomNotification(index)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Stack>
+                                ))}
+                            </Box>
+                        )}
                         <Button variant="outlined" onClick={handleAddCustomNotification}>
                             Добавить кастомное уведомление
                         </Button>

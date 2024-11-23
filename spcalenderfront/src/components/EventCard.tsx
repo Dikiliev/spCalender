@@ -7,8 +7,9 @@ import {
     Sports as SportsIcon,
     Wc as GenderIcon,
     Group as AgeGroupIcon,
-    Notifications as NotificationsIcon,
+    NotificationsNone as NotificationsNoneIcon,
 } from '@mui/icons-material';
+
 import { IEvent } from '@src/types/events';
 import NotificationsModal from './NotificationsModal'; // Компонент модального окна для уведомлений
 
@@ -78,7 +79,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                             Подробнее
                         </Button>
                         <IconButton color="primary" onClick={handleOpenModal}>
-                            <NotificationsIcon />
+                            <NotificationsNoneIcon />
                         </IconButton>
                     </Box>
                 </CardContent>

@@ -83,16 +83,16 @@ const Header: React.FC = observer(() => {
                                 ariaLabel='show statistics'
                             />
 
-                            <IconWithLabel
-                                onClick={() => navigate('/calendar')}
-                                icon={<CalendarMonthIcon />}
-                                label='Календарь'
-                                badgeContent={0}
-                                ariaLabel='show calendar'
-                            />
+                            {/*<IconWithLabel*/}
+                            {/*    onClick={() => navigate('/calendar')}*/}
+                            {/*    icon={<CalendarMonthIcon />}*/}
+                            {/*    label='Календарь'*/}
+                            {/*    badgeContent={0}*/}
+                            {/*    ariaLabel='show calendar'*/}
+                            {/*/>*/}
 
                             <IconWithLabel
-                                onClick={() => navigate('/events')}
+                                onClick={() => navigate('/')}
                                 icon={<EventIcon />}
                                 label='Мероприятия'
                                 badgeContent={0}
@@ -108,16 +108,16 @@ const Header: React.FC = observer(() => {
                                         onClick={() => navigate('/notifications')}
                                         icon={<NotificationsIcon />}
                                         label='Уведомления'
-                                        badgeContent={5}
+                                        badgeContent={0}
                                         ariaLabel='show notifications'
                                     />
-                                    <IconWithLabel
-                                        onClick={() => navigate('/favorites')}
-                                        icon={<FavoriteIcon />}
-                                        label='Избранное'
-                                        badgeContent={2}
-                                        ariaLabel='show favorites'
-                                    />
+                                    {/*<IconWithLabel*/}
+                                    {/*    onClick={() => navigate('/favorites')}*/}
+                                    {/*    icon={<FavoriteIcon />}*/}
+                                    {/*    label='Избранное'*/}
+                                    {/*    badgeContent={2}*/}
+                                    {/*    ariaLabel='show favorites'*/}
+                                    {/*/>*/}
 
                                     <IconWithLabel
                                         icon={<AccountCircle />}

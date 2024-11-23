@@ -22,8 +22,8 @@ if DEBUG:
 
 AUTH_USER_MODEL = 'users.User'
 
-EMAIL_HOST_USER = 'workesta@mail.ru'
-EMAIL_HOST_PASSWORD = '4TeSqRQvBaQ55SSEGfhA'
+EMAIL_HOST_USER = 'sporttimeevent@mail.ru'
+EMAIL_HOST_PASSWORD = 'R@mzan228'
 
 
 

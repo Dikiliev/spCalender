@@ -7,8 +7,7 @@ from config import settings
 from .models import Notification
 
 from django.conf import settings
-from datetime import datetime
-from datetime import date
+import datetime
 
 def notification_scheduler():
     while True:
@@ -20,34 +19,42 @@ def notification_scheduler():
         except Exception as e:
             print(f"Ошибка в notification_scheduler: {e}")
 
-        time.sleep(60)
+        time.sleep(30)
 
 
 def send_notification(notification):
     notification.is_sent = True
     notification.save()
 
-    time_left = notification.notify_time - now()
-
-    subject = f'Напоминание: "{notification.event.title}" начинается скоро!'
-
-    if time_left < datetime.timedelta(days=1):
-        message = f'Мероприятие "{notification.event.title}" начнется менее чем через 24 часа.'
-    elif time_left < datetime.timedelta(days=3):
-        message = f'Мероприятие "{notification.event.title}" начнется через несколько дней.'
-    else:
-        days_left = time_left.days
-        message = f'До начала мероприятия "{notification.event.title}" осталось {days_left} дней.'
-
-    message += f'\n\nДетали мероприятия:\n' \
-               f'Название: {notification.event.title}\n' \
-               f'Дата и время начала: {notification.event.start_date.strftime("%d.%m.%Y %H:%M")}\n' \
-               f'Локация: {notification.event.location}\n' \
-               f'\nНе пропустите!'
-
+    subject = ''
+    message = ''
     from_email = settings.EMAIL_HOST_USER
 
     try:
+        time_left = notification.notify_time - now()
+
+        subject = f'Напоминание: "{notification.event.title}" начинается скоро!'
+
+        if time_left < datetime.timedelta(days=1):
+            message = f'Мероприятие "{notification.event.title}" начнется менее чем через 24 часа.'
+        elif time_left < datetime.timedelta(days=3):
+            message = f'Мероприятие "{notification.event.title}" начнется через несколько дней.'
+        else:
+            days_left = time_left.days
+            message = f'До начала мероприятия "{notification.event.title}" осталось {days_left} дней.'
+
+        message += f'\n\nДетали мероприятия:\n' \
+                   f'Название: {notification.event.title}\n' \
+                   f'Дата и время начала: {notification.event.start_date.strftime("%d.%m.%Y %H:%M")}\n' \
+                   f'Локация: {notification.event.location}\n' \
+                   f'\nНе пропустите!'
+
+    except Exception as e:
+        print(f"Ошибка при составлении письма: {e}")
+
+    print(f'(from: {from_email}; recip: {notification.user.email}) Отправка...')
+    try:
+
         send_mail(
             subject,
             message,

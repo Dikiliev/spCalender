@@ -1,14 +1,12 @@
-// src/components/header/ProfileMenu.tsx
 import React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import { AccountCircle, Logout, Favorite, ShoppingCart } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { Logout } from '@mui/icons-material';
+import { useStore } from '@stores/StoreContext';
+import {Typography} from "@mui/material";
 
 interface ProfileMenuProps {
     anchorEl: null | HTMLElement;
@@ -17,19 +15,19 @@ interface ProfileMenuProps {
     isMobileMenuOpen: boolean;
     handleMenuClose: () => void;
     handleMobileMenuClose: () => void;
-    handleProfileMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
-    anchorEl,
-    mobileMoreAnchorEl,
-    isMenuOpen,
-    isMobileMenuOpen,
-    handleMenuClose,
-    handleMobileMenuClose,
-    handleProfileMenuOpen,
-}) => {
+                                                     anchorEl,
+                                                     mobileMoreAnchorEl,
+                                                     isMenuOpen,
+                                                     isMobileMenuOpen,
+                                                     handleMenuClose,
+                                                     handleMobileMenuClose,
+                                                 }) => {
     const navigate = useNavigate();
+    const { authStore } = useStore();
+
     const menuId = 'primary-search-account-menu';
     const mobileMenuId = 'primary-search-account-menu-mobile';
 
@@ -41,70 +39,63 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
     return (
         <>
+            {/* Десктопное меню */}
             <Menu
-                elevation={1}
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
                 id={menuId}
-                keepMounted
+                anchorEl={anchorEl}
                 open={isMenuOpen}
                 onClose={handleMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
                 <MenuItem onClick={() => handleNavigate('/profile')}>Профиль</MenuItem>
-                <MenuItem onClick={() => handleNavigate('/logout')}>Выйти с аккаунта</MenuItem>
+                <MenuItem onClick={() => handleNavigate('/logout')}>Выйти</MenuItem>
             </Menu>
+
+            {/* Мобильное меню */}
             <Menu
-                elevation={1}
-                anchorEl={mobileMoreAnchorEl}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
                 id={mobileMenuId}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
+                anchorEl={mobileMoreAnchorEl}
                 open={isMobileMenuOpen}
                 onClose={handleMobileMenuClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-                <MenuItem onClick={() => handleNavigate('/favorites')}>
-                    <IconButton size='large' aria-label='show favorites' color='inherit'>
-                        <Badge badgeContent={2} color='primary'>
-                            <FavoriteIcon />
-                        </Badge>
-                    </IconButton>
-                    <p>Избранное</p>
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate('/cart')}>
-                    <IconButton size='large' aria-label='show shopping cart' color='inherit'>
-                        <Badge badgeContent={3} color='primary'>
-                            <ShoppingCartIcon />
-                        </Badge>
-                    </IconButton>
-                    <p>Заказы</p>
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate('/profile')}>
-                    <IconButton size='large' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' color='inherit'>
-                        <AccountCircle />
-                    </IconButton>
-                    <p>Профиль</p>
-                </MenuItem>
+                {authStore.isAuthenticated && (
+                    <>
+                        <MenuItem onClick={() => handleNavigate('/favorites')}>
+                            <IconButton size="large" color="inherit">
+                                <Badge badgeContent={2} color="primary">
+                                    <Favorite />
+                                </Badge>
+                            </IconButton>
+                            <Typography variant="body2">Избранное</Typography>
+                        </MenuItem>
 
-                <MenuItem onClick={() => handleNavigate('/logout')}>
-                    <IconButton size='large' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' color='inherit'>
-                        <Logout />
-                    </IconButton>
-                    <p>Выйти</p>
-                </MenuItem>
+                        <MenuItem onClick={() => handleNavigate('/cart')}>
+                            <IconButton size="large" color="inherit">
+                                <Badge badgeContent={3} color="primary">
+                                    <ShoppingCart />
+                                </Badge>
+                            </IconButton>
+                            <Typography variant="body2">Заказы</Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={() => handleNavigate('/profile')}>
+                            <IconButton size="large" color="inherit">
+                                <AccountCircle />
+                            </IconButton>
+                            <Typography variant="body2">Профиль</Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={() => handleNavigate('/logout')}>
+                            <IconButton size="large" color="inherit">
+                                <Logout />
+                            </IconButton>
+                            <Typography variant="body2">Выйти</Typography>
+                        </MenuItem>
+                    </>
+                )}
             </Menu>
         </>
     );
