@@ -3,10 +3,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import { AccountCircle, Logout, Favorite, ShoppingCart } from '@mui/icons-material';
+import { AccountCircle, Logout, Notifications, SupportAgent, BarChart, Event } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@stores/StoreContext';
-import {Typography} from "@mui/material";
 
 interface ProfileMenuProps {
     anchorEl: null | HTMLElement;
@@ -48,8 +47,18 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-                <MenuItem onClick={() => handleNavigate('/profile')}>Профиль</MenuItem>
-                <MenuItem onClick={() => handleNavigate('/logout')}>Выйти</MenuItem>
+                <MenuItem onClick={() => handleNavigate('/profile')}>
+                    <IconButton size="small" color="inherit">
+                        <AccountCircle />
+                    </IconButton>
+                    Профиль
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate('/logout')}>
+                    <IconButton size="small" color="inherit">
+                        <Logout />
+                    </IconButton>
+                    Выйти
+                </MenuItem>
             </Menu>
 
             {/* Мобильное меню */}
@@ -61,38 +70,45 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
+                <MenuItem onClick={() => handleNavigate('/support')}>
+                    <IconButton size="large" color="inherit">
+                        <SupportAgent />
+                    </IconButton>
+                    <p>Поддержка</p>
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate('/statistics')}>
+                    <IconButton size="large" color="inherit">
+                        <BarChart />
+                    </IconButton>
+                    <p>Статистика</p>
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate('/')}>
+                    <IconButton size="large" color="inherit">
+                        <Event />
+                    </IconButton>
+                    <p>Мероприятия</p>
+                </MenuItem>
                 {authStore.isAuthenticated && (
                     <>
-                        <MenuItem onClick={() => handleNavigate('/favorites')}>
+                        <MenuItem onClick={() => handleNavigate('/notifications')}>
                             <IconButton size="large" color="inherit">
-                                <Badge badgeContent={2} color="primary">
-                                    <Favorite />
+                                <Badge badgeContent={0} color="primary">
+                                    <Notifications />
                                 </Badge>
                             </IconButton>
-                            <Typography variant="body2">Избранное</Typography>
+                            <p>Уведомления</p>
                         </MenuItem>
-
-                        <MenuItem onClick={() => handleNavigate('/cart')}>
-                            <IconButton size="large" color="inherit">
-                                <Badge badgeContent={3} color="primary">
-                                    <ShoppingCart />
-                                </Badge>
-                            </IconButton>
-                            <Typography variant="body2">Заказы</Typography>
-                        </MenuItem>
-
                         <MenuItem onClick={() => handleNavigate('/profile')}>
                             <IconButton size="large" color="inherit">
                                 <AccountCircle />
                             </IconButton>
-                            <Typography variant="body2">Профиль</Typography>
+                            <p>Профиль</p>
                         </MenuItem>
-
                         <MenuItem onClick={() => handleNavigate('/logout')}>
                             <IconButton size="large" color="inherit">
                                 <Logout />
                             </IconButton>
-                            <Typography variant="body2">Выйти</Typography>
+                            <p>Выйти</p>
                         </MenuItem>
                     </>
                 )}

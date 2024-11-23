@@ -14,10 +14,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import EventIcon from '@mui/icons-material/Event';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import IconButton from '@mui/material/IconButton';
 import theme from '@styles/theme';
 import { useNavigate } from 'react-router-dom';
@@ -135,7 +134,7 @@ const Header: React.FC = observer(() => {
                         </Box>
 
                         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton size='large' aria-label='show more' aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
+                            <IconButton size='large' aria-label='show more' aria-haspopup='true' onClick={handleMobileMenuOpen} >
                                 <MoreIcon />
                             </IconButton>
                         </Box>
