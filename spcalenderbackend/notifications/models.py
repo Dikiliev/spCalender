@@ -14,9 +14,10 @@ class Subscription(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    notify_time = models.DateTimeField(default=now)
+    notify_time = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_sent = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Notification for {self.user.username} on {self.notify_time}"

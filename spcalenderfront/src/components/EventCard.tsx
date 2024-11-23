@@ -87,6 +87,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             {/* Модальное окно для управления уведомлениями */}
             <NotificationsModal
                 eventId={event.id}
+                startDate={event.start_date}
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
             />

@@ -7,16 +7,16 @@ from config import settings
 from .models import Notification
 
 from django.conf import settings
-import datetime
+from datetime import datetime
+from datetime import date
 
 def notification_scheduler():
     while True:
         try:
-            notifications = Notification.objects.filter(notify_time__lte=now(), is_sent=False)
+
+            notifications = Notification.objects.filter(notify_time__lt=now(), is_sent=False)
             for notification in notifications:
                 send_notification(notification)
-                notification.is_sent = True
-                notification.save()
         except Exception as e:
             print(f"Ошибка в notification_scheduler: {e}")
 
@@ -24,6 +24,9 @@ def notification_scheduler():
 
 
 def send_notification(notification):
+    notification.is_sent = True
+    notification.save()
+
     time_left = notification.notify_time - now()
 
     subject = f'Напоминание: "{notification.event.title}" начинается скоро!'
@@ -52,6 +55,7 @@ def send_notification(notification):
             [notification.user.email],
             fail_silently=False
         )
+
         print(f"Уведомление успешно отправлено: {notification.user.username} - {notification.event.title}")
     except Exception as e:
         print(f"Ошибка при отправке уведомления: {e}")

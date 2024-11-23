@@ -16,6 +16,7 @@ import Logout from "@pages/auth/Logout";
 import HomePage from "@pages/HomePage";
 import React from "react";
 import StatisticsPage from "@pages/statistics/StatisticsPage";
+import NotificationsPage from "@pages/Notifications/NotificationsPage";
 
 const BaseLayout: React.FC = () => {
     const location = useLocation();
@@ -41,6 +42,7 @@ const App: React.FC = () => {
 
                         <Route path='/' element={<HomePage />} />
                         <Route path="/statistics" element={<StatisticsPage />} />
+                        <Route path="/notifications" element={<NotificationsPage />} />;
 
                         <Route path='profile' element={<ProfilePage />} />
                         <Route path='login' element={<LoginPage />} />

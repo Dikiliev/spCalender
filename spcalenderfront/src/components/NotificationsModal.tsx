@@ -18,11 +18,12 @@ import dayjs, { Dayjs } from 'dayjs';
 
 interface NotificationsModalProps {
     eventId: number;
+    startDate: string;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const NotificationsModal: React.FC<NotificationsModalProps> = ({ eventId, isOpen, onClose }) => {
+const NotificationsModal: React.FC<NotificationsModalProps> = ({ eventId, startDate, isOpen, onClose }) => {
     const [notifications, setNotifications] = useState({
         weekBefore: true,
         dayBefore: true,
@@ -52,9 +53,9 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({ eventId, isOpen
 
     const handleSaveNotifications = async () => {
         const notificationTimes = [
-            ...(notifications.weekBefore ? [dayjs().subtract(7, 'day')] : []),
-            ...(notifications.dayBefore ? [dayjs().subtract(1, 'day')] : []),
-            ...(notifications.onEventDay ? [dayjs()] : []),
+            ...(notifications.weekBefore ? [dayjs(startDate).subtract(7, 'day')] : []),
+            ...(notifications.dayBefore ? [dayjs(startDate).subtract(1, 'day')] : []),
+            ...(notifications.onEventDay ? [dayjs(startDate)] : []),
             ...customNotifications,
         ];
 

@@ -3,7 +3,7 @@ import { INotification, ICreateNotification } from '@src/types/notifications';
 import {rootStore} from "@src/stores";
 
 // Получение списка уведомлений
-export const getNotifications = async (): Promise<INotification[]> => {
+export const fetchNotifications = async (): Promise<INotification[]> => {
     const { data } = await apiInstance.get('/notifications/list/');
     return data;
 };
@@ -28,5 +28,9 @@ export const updateNotification = async (id: number, updates: Partial<ICreateNot
 
 // Удаление уведомления
 export const deleteNotification = async (id: number): Promise<void> => {
-    await apiInstance.delete(`/notifications/${id}/`);
+    await apiInstance.delete(`/notifications/list/${id}/`);
+};
+
+export const markAsRead = async (id: number): Promise<void> => {
+    await apiInstance.patch(`/notifications/list/${id}/`, { is_read: true });
 };
