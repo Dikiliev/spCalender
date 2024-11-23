@@ -102,7 +102,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
 
     return (
         <Paper
-            elevation={3}
             sx={{
                 width: 300,
                 p: 2,

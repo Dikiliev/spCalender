@@ -49,19 +49,19 @@ const HomePage: React.FC = () => {
         <Container maxWidth='xl' sx={{ display: 'flex', mt: 4 }}>
             {/* Контентная область */}
             <Box flex="1">
-                <Paper elevation={3} sx={{ p: 2 }}>
-                    <Box mb={4}>
+                <Box>
+                    <Paper sx={{ p: 4, mb: 2 }}>
                         <Typography variant="h4" fontWeight="bold">
-                            Календарь мероприятий
+                            Календарь спортивных мероприятий
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary">
                             Найдите ближайшие спортивные события
                         </Typography>
-                    </Box>
+                    </Paper>
 
                     {/* Список событий */}
                     <EventsList events={events || []} isLoading={isLoading} error={error} />
-                </Paper>
+                </Box>
             </Box>
 
             {/* Боковая панель фильтров */}

@@ -1,7 +1,12 @@
 from django.db import models
 
+
 class SportType(models.Model):
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 
 class Event(models.Model):
     GENDER_CHOICES = [
@@ -20,5 +25,9 @@ class Event(models.Model):
     age_group = models.CharField(max_length=50)
     event_type = models.CharField(max_length=50)  # e.g., 'Championship', 'Cup'
     description = models.TextField(blank=True, null=True)
+    program = models.TextField(blank=True, null=True)  # Новое поле для дисциплины/программы
     is_cancelled = models.BooleanField(default=False)
     last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

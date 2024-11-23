@@ -56,7 +56,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
                     <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                         <AgeGroupIcon fontSize="small" color="primary" />
-                        <Typography variant="body2">Возраст {event.age_group || 'Не указана'}</Typography>
+                        <Typography variant="body2">{event.age_group || 'Не указана'}</Typography>
                     </Stack>
 
                     <Stack direction="row" alignItems="center" spacing={1}>
