@@ -66,10 +66,9 @@ const HomePage: React.FC = () => {
 
             {/* Боковая панель фильтров */}
             <FiltersPanel
-                filters={filters}
-                onFiltersChange={setFilters}
+                onApplyFilters={setFilters}
                 onResetFilters={resetFilters}
-            />
+             />
         </Container>
     );
 };

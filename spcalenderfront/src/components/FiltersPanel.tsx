@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Typography, TextField, MenuItem, Button, Stack, Paper } from '@mui/material';
 import { IFilters } from '@src/types/events';
+import SortBy from '@components/SortBy';
+import ParticipantsFilter from '@components/ParticipantsFilter';
 
 interface FiltersPanelProps {
-    onApplyFilters: (filters: IFilters) => void; // Применение фильтров
-    onResetFilters: () => void; // Сброс фильтров
+    onApplyFilters: (filters: IFilters) => void;
+    onResetFilters: () => void;
 }
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilters }) => {
@@ -15,11 +17,12 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
         participantsMax: '',
         gender: '',
         ageGroup: '',
-        period: '', // Локальное поле для выбора периода
-        duration: '', // Локальное поле для выбора длительности
-        customDuration: '', // Локальное поле для кастомной длительности
-        startDate: '', // Локальное поле для расчёта дат
-        endDate: '', // Локальное поле для расчёта дат
+        period: '',
+        duration: '',
+        customDuration: '',
+        startDate: '',
+        endDate: '',
+        ordering: '', // Для сортировки
     });
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -65,7 +68,6 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
     const transformFilters = (): IFilters => {
         const { duration, customDuration, ...serverFilters } = localFilters;
 
-        // Преобразование участников в числа
         const participantsMin = localFilters.participantsMin
             ? parseInt(localFilters.participantsMin, 10)
             : undefined;
@@ -95,7 +97,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
 
     const handleApplyFilters = () => {
         const filtersForServer = transformFilters();
-        onApplyFilters(filtersForServer); // Отправляем только нужные данные
+        onApplyFilters(filtersForServer);
     };
 
     return (
@@ -129,6 +131,15 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                     <MenuItem value="swimming">Плавание</MenuItem>
                     <MenuItem value="football">Футбол</MenuItem>
                 </TextField>
+
+                <TextField
+                    label="Местоположение"
+                    name="location"
+                    value={localFilters.location}
+                    onChange={handleFilterChange}
+                    variant="outlined"
+                    size="small"
+                />
 
                 <TextField
                     label="Период"
@@ -174,25 +185,13 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                     />
                 )}
 
-                <TextField
-                    label="Минимум участников"
-                    type="number"
-                    name="participantsMin"
-                    value={localFilters.participantsMin}
+                <ParticipantsFilter
+                    participantsMin={localFilters.participantsMin}
+                    participantsMax={localFilters.participantsMax}
                     onChange={handleFilterChange}
-                    variant="outlined"
-                    size="small"
                 />
 
-                <TextField
-                    label="Максимум участников"
-                    type="number"
-                    name="participantsMax"
-                    value={localFilters.participantsMax}
-                    onChange={handleFilterChange}
-                    variant="outlined"
-                    size="small"
-                />
+                <SortBy value={localFilters.ordering} onChange={handleFilterChange} />
 
                 <Button variant="contained" onClick={handleApplyFilters} fullWidth>
                     Применить

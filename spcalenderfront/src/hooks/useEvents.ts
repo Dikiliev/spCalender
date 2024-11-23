@@ -3,12 +3,13 @@ import { fetchEvents } from '@src/api/events';
 import { IEvent, IFilters } from '@src/types/events';
 
 export const useEvents = (filters: IFilters): UseQueryResult<IEvent[], Error> => {
-    // Очистка фильтров
     const sanitizedFilters: Partial<IFilters> = Object.fromEntries(
         Object.entries(filters).filter(([_, value]) => value !== undefined && value !== '')
     ) as Partial<IFilters>;
 
-    const queryKey = ['events', sanitizedFilters];
+    const queryKey = ['events', JSON.stringify(sanitizedFilters)];
+
+    console.log(sanitizedFilters);
 
     const options: UseQueryOptions<IEvent[], Error, IEvent[]> = {
         queryKey,
