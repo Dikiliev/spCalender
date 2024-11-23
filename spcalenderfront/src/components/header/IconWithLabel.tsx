@@ -5,6 +5,7 @@ import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import theme from "@styles/theme";
 
 interface IconWithLabelProps {
     icon: React.ReactElement;
@@ -18,7 +19,7 @@ interface IconWithLabelProps {
 const IconWithLabel: React.FC<IconWithLabelProps> = ({ icon, label, badgeContent = 0, onClick, sx = {}, ariaLabel }) => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1 }}>
-            <IconButton size='large' aria-label={ariaLabel} color='inherit' sx={sx} onClick={onClick}>
+            <IconButton size='large' aria-label={ariaLabel} sx={{ color: theme.palette.text.primary, ...sx}} onClick={onClick}>
                 <Badge
                     variant='standard'
                     badgeContent={badgeContent}
@@ -31,7 +32,7 @@ const IconWithLabel: React.FC<IconWithLabelProps> = ({ icon, label, badgeContent
                     {icon}
                 </Badge>
             </IconButton>
-            <Typography variant='caption'>{label}</Typography>
+            <Typography variant='caption' color={theme.palette.text.primary}>{label}</Typography>
         </Box>
     );
 };

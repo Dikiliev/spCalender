@@ -12,14 +12,17 @@ import IconWithLabel from './IconWithLabel';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import EventIcon from '@mui/icons-material/Event';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import theme from '@styles/theme';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { useStore } from '@stores/StoreContext';
-
-import MenuIcon from '@mui/icons-material/Menu';
 
 const Header: React.FC = observer(() => {
     const navigate = useNavigate();
@@ -56,28 +59,74 @@ const Header: React.FC = observer(() => {
                 <Container maxWidth='xl'>
                     <Toolbar disableGutters sx={{ gap: 3 }}>
                         <Logo className={styles.logo} onClick={() => navigate('/')} />
-                        <Button variant='contained' size='large' sx={{ px: 2 }} onClick={() => navigate('/categories')} endIcon={<MenuIcon />}>
-                            Каталог
-                        </Button>
+                        {/*<Button variant='contained' size='large' sx={{ px: 2 }} onClick={() => navigate('/categories')} endIcon={<MenuIcon />}>*/}
+                        {/*    Каталог*/}
+                        {/*</Button>*/}
 
                         <Box flexGrow={1}></Box>
 
                         <Box sx={{ display: { xs: 'none', md: 'flex', gap: theme.spacing(5), alignItems: 'center' } }}>
                             <IconWithLabel
-                                onClick={() => navigate('/orders')}
-                                icon={<ReceiptLongIcon />}
-                                label='Заказы'
+                                onClick={() => navigate('/support')}
+                                icon={<SupportAgentIcon />}
+                                label='Поддержка'
                                 badgeContent={0}
-                                ariaLabel='show orders'
+                                ariaLabel='show support'
                             />
 
+
+                            <IconWithLabel
+                                onClick={() => navigate('/statistics')}
+                                icon={<BarChartIcon />}
+                                label='Статистика'
+                                badgeContent={0}
+                                ariaLabel='show statistics'
+                            />
+
+                            <IconWithLabel
+                                onClick={() => navigate('/calendar')}
+                                icon={<CalendarMonthIcon />}
+                                label='Календарь'
+                                badgeContent={0}
+                                ariaLabel='show calendar'
+                            />
+
+                            <IconWithLabel
+                                onClick={() => navigate('/events')}
+                                icon={<EventIcon />}
+                                label='Мероприятия'
+                                badgeContent={0}
+                                ariaLabel='show events'
+                            />
+
+
+
+
                             {authStore.isAuthenticated ? (
-                                <IconWithLabel
-                                    icon={<AccountCircle />}
-                                    label='Профиль'
-                                    ariaLabel='account of current user'
-                                    onClick={handleProfileMenuOpen}
-                                />
+                                <>
+                                    <IconWithLabel
+                                        onClick={() => navigate('/notifications')}
+                                        icon={<NotificationsIcon />}
+                                        label='Уведомления'
+                                        badgeContent={5}
+                                        ariaLabel='show notifications'
+                                    />
+                                    <IconWithLabel
+                                        onClick={() => navigate('/favorites')}
+                                        icon={<FavoriteIcon />}
+                                        label='Избранное'
+                                        badgeContent={2}
+                                        ariaLabel='show favorites'
+                                    />
+
+                                    <IconWithLabel
+                                        icon={<AccountCircle />}
+                                        label='Профиль'
+                                        ariaLabel='account of current user'
+                                        onClick={handleProfileMenuOpen}
+                                    />
+                                </>
+
                             ) : (
                                 <Button variant='contained' onClick={() => navigate('/login')}>
                                     Войти
