@@ -25,6 +25,10 @@ export interface StatisticsResponse {
     eventDataByDays: EventDataByDays[];
     topEventsByCount: TopEventsByCount[];
     topEventsByParticipants: ParticipantData[];
+
+    topCompetitionByCount: TopEventsByCount[];
+    topCompetitionByParticipants: ParticipantData[];
+
     ageData: AgeData[];
 }
 

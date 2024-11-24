@@ -66,6 +66,20 @@ class StatisticsView(APIView):
             .order_by('day')
         )
 
+        top_competition_by_count = (
+            Event.objects.filter(filters)
+            .values(sport=F('competition__name'))
+            .annotate(events=Count('id'))
+            .order_by('-events')[:10]
+        )
+
+        top_competition_by_participants = (
+            Event.objects.filter(filters)
+            .values(sport=F('competition__name'))
+            .annotate(participants=Sum('participants'))
+            .order_by('-participants')[:10]
+        )
+
         # Топ-10 по количеству мероприятий
         top_events_by_count = (
             Event.objects.filter(filters)
@@ -100,8 +114,13 @@ class StatisticsView(APIView):
         return Response(
             {
                 'eventDataByDays': list(event_data_by_days),
+
                 'topEventsByCount': list(top_events_by_count),
                 'topEventsByParticipants': list(top_events_by_participants),
+
+                'topCompetitionByCount': list(top_competition_by_count),
+                'topCompetitionByParticipants': list(top_competition_by_participants),
+
                 'ageData': list(age_data),
             },
             status=status.HTTP_200_OK,
