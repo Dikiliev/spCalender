@@ -49,11 +49,11 @@ def downloadFiles():
 
                     output_path = os.path.join(output_dir, matches + '.pdf')
 
-                    result.append(output_path)
-
                     if (os.path.isfile(output_path)):
                         print(f"Файл {output_path} уже скачан")
                         continue
+
+                    result.append(output_path)
 
                     file_response = requests.get(file_url, headers=headers, stream=True, verify=False)
                     if file_response.status_code == 200:

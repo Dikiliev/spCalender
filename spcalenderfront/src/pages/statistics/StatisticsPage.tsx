@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { useStatistics } from '@src/hooks/useStatistics';
 import EventByDays from '@src/components/statistics/EventByDays';
-import AgeStatistics from '@src/components/statistics/AgeStatistics';
 import TopEventsByCount from '@src/components/statistics/TopEventsByCount';
 import TopEventsByParticipants from '@src/components/statistics/ParticipantsBySport';
 
