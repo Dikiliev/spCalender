@@ -76,6 +76,25 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
             nextWeek.setDate(today.getDate() + 7);
             startDate = today.toISOString().split('T')[0];
             endDate = nextWeek.toISOString().split('T')[0];
+        } else if (period === 'month') {
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            startDate = firstDayOfMonth.toISOString().split('T')[0];
+            endDate = lastDayOfMonth.toISOString().split('T')[0];
+        } else if (period === 'quarter') {
+            const currentMonth = today.getMonth();
+            const startMonth = currentMonth - (currentMonth % 3);
+            const firstDayOfQuarter = new Date(today.getFullYear(), startMonth, 1);
+            const lastDayOfQuarter = new Date(today.getFullYear(), startMonth + 3, 0);
+            startDate = firstDayOfQuarter.toISOString().split('T')[0];
+            endDate = lastDayOfQuarter.toISOString().split('T')[0];
+        } else if (period === 'halfyear') {
+            const currentMonth = today.getMonth();
+            const startMonth = currentMonth < 6 ? 0 : 6;
+            const firstDayOfHalfYear = new Date(today.getFullYear(), startMonth, 1);
+            const lastDayOfHalfYear = new Date(today.getFullYear(), startMonth + 6, 0);
+            startDate = firstDayOfHalfYear.toISOString().split('T')[0];
+            endDate = lastDayOfHalfYear.toISOString().split('T')[0];
         }
 
         setLocalFilters((prev) => ({
@@ -84,6 +103,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
             start_date_before: endDate,
         }));
     };
+
 
     const transformFilters = (): IFilters => {
         const { duration, customDuration, ...serverFilters } = localFilters;
@@ -236,7 +256,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                     <MenuItem value="today">Сегодня</MenuItem>
                     <MenuItem value="tomorrow">Завтра</MenuItem>
                     <MenuItem value="week">Текущая неделя</MenuItem>
+                    <MenuItem value="month">Текущий месяц</MenuItem>
+                    <MenuItem value="quarter">Квартал</MenuItem>
+                    <MenuItem value="halfyear">Полгода</MenuItem>
                 </TextField>
+
 
                 {/*<TextField*/}
                 {/*    label="Длительность"*/}

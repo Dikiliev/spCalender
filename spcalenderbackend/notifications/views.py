@@ -10,6 +10,7 @@ class NotificationListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
@@ -27,6 +28,7 @@ class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
