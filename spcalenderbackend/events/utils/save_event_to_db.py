@@ -1,4 +1,4 @@
-from events.models import Event, SportType
+from events.models import Event, SportType, CompetitionType
 from datetime import datetime
 
 def save_event_to_db(event_data):
@@ -11,7 +11,8 @@ def save_event_to_db(event_data):
         end_date = datetime.strptime(event_data["dates"]["to"], "%d.%m.%Y")
 
         # Получаем или создаем SportType
-        sport_type, _ = SportType.objects.get_or_create(name=event_data["sport_type"])
+        competition, _ = CompetitionType.objects.get_or_create(name=event_data["sport_type"])
+        sport_type, _ = SportType.objects.get_or_create(name=event_data["name"].split()[0])
 
         # Извлечение данных о локации
         location_parts = event_data["location"].split(",")
@@ -30,7 +31,7 @@ def save_event_to_db(event_data):
         age = event_data["gender_age_info"][0]['age']
 
         if age[0]:
-            age_group += f'от {age[0]}'
+            age_group += f'от {age[0]} '
         if age[1]:
             age_group += f'до {age[1]}'
 
@@ -41,6 +42,7 @@ def save_event_to_db(event_data):
         event, created = Event.objects.update_or_create(
             title=event_data["name"],
             sport_type=sport_type,
+            competition=competition,
             start_date=start_date,
             end_date=end_date,
             defaults={

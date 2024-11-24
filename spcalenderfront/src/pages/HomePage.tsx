@@ -7,21 +7,24 @@ import {
     IconButton,
     Drawer,
     useMediaQuery,
+    CircularProgress,
+    Grid,
 } from '@mui/material';
-import { useEvents } from '@src/hooks/useEvents';
-import { IFilters } from '@src/types/events';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchAllEvents } from '@src/api/events';
 import EventsList from '@components/EventsList';
 import { saveToStorage, loadFromStorage } from '@src/utils/storage';
 import FiltersPanel from '@components/FiltersPanel';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
+import { useInView } from 'react-intersection-observer';
 import theme from '@styles/theme';
 
 const FILTERS_STORAGE_KEY = 'user_event_filters';
 
 const HomePage: React.FC = () => {
-    const [filters, setFilters] = useState<IFilters>(() => {
-        return loadFromStorage<IFilters>(FILTERS_STORAGE_KEY) || {
+    const [filters, setFilters] = useState(() => {
+        return loadFromStorage(FILTERS_STORAGE_KEY) || {
             sportType: '',
             startDate: '',
             endDate: '',
@@ -37,12 +40,38 @@ const HomePage: React.FC = () => {
 
     const [isFiltersOpen, setFiltersOpen] = useState(false);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const { ref, inView } = useInView();
 
     React.useEffect(() => {
         saveToStorage(FILTERS_STORAGE_KEY, filters);
     }, [filters]);
 
-    const { data: events, isLoading, error } = useEvents(filters);
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+    } = useInfiniteQuery({
+        queryKey: ['events', filters],
+        queryFn: ({ pageParam = 1 }) => fetchAllEvents(pageParam, filters),
+        getNextPageParam: (lastPage) => {
+            const nextUrl = lastPage.next;
+            if (nextUrl) {
+                const urlParams = new URLSearchParams(nextUrl.split('?')[1]);
+                return urlParams.get('page') ? parseInt(urlParams.get('page')!) : undefined;
+            }
+            return undefined;
+        },
+        initialPageParam: 1,
+    });
+
+    React.useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage]);
 
     const resetFilters = () => {
         setFilters({
@@ -63,6 +92,8 @@ const HomePage: React.FC = () => {
         setFiltersOpen(!isFiltersOpen);
     };
 
+    const events = data?.pages.flatMap((page) => page.results) || [];
+
     return (
         <Container maxWidth="xl" sx={{ display: 'flex', mt: 4 }}>
             {/* Контентная область */}
@@ -78,7 +109,10 @@ const HomePage: React.FC = () => {
                     </Paper>
 
                     {/* Список событий */}
-                    <EventsList events={events || []} isLoading={isLoading} error={error} />
+                    <EventsList events={events} isLoading={isLoading} error={isError ? 'Ошибка загрузки данных.' : null} />
+                    <Grid item xs={12} ref={ref} sx={{ textAlign: 'center', mt: 2 }}>
+                        {isFetchingNextPage && <CircularProgress />}
+                    </Grid>
                 </Box>
             </Box>
 
@@ -92,19 +126,18 @@ const HomePage: React.FC = () => {
                         onClick={toggleFilters}
                         sx={{
                             position: 'fixed',
-                            bottom: 16, // Расстояние от нижнего края
-                            right: 16, // Расстояние от правого края
+                            bottom: 16,
+                            right: 16,
                             zIndex: theme.zIndex.drawer + 1,
                             backgroundColor: 'white',
                             boxShadow: theme.shadows[4],
-                            borderRadius: '50%', // Круглая форма
-                            width: 56, // Размер кнопки
-                            height: 56, // Размер кнопки
+                            borderRadius: '50%',
+                            width: 56,
+                            height: 56,
                         }}
                     >
                         <FilterListIcon fontSize="large" />
                     </IconButton>
-
 
                     <Drawer
                         anchor="right"

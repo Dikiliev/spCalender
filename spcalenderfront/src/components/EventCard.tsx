@@ -35,7 +35,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                         <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                             <SportsIcon fontSize="small" color="primary" />
                             <Typography variant="body2" color="textSecondary">
-                                {event.sport_type ? event.sport_type.name : 'Не указан'}
+                                {event.sport_type ? event.competition.name : 'Не указан'}
                             </Typography>
                         </Stack>
 

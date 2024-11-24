@@ -3,10 +3,16 @@ export interface ISportType {
     name: string;
 }
 
+export interface ICompetitionType {
+    id: number;
+    name: string;
+}
+
 export interface IEvent {
     id: number;
     title: string;
     sport_type: ISportType;
+    competition: ICompetitionType;
     start_date: string;
     end_date: string;
     country: string;
@@ -24,9 +30,10 @@ export interface IEvent {
 }
 
 export interface IFilters {
-    sportType?: string;
-    startDate?: string;
-    endDate?: string;
+    sportType?: string[]; // Изменено на массив
+    competition?: string[]; // Изменено на массив
+    startDate?: string; // ISO-формат даты
+    endDate?: string; // ISO-формат даты
     country?: string;
     region?: string;
     city?: string;
@@ -36,6 +43,5 @@ export interface IFilters {
     gender?: 'male' | 'female' | 'mixed';
     ageGroup?: string;
     isCancelled?: boolean;
-    ordering?: string;
-    duration?: number;
+    ordering?: string; // Поле сортировки
 }
