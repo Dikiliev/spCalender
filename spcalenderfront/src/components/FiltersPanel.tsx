@@ -189,7 +189,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
 
             <Stack spacing={2}>
                 <TextField
-                    label="Вид спорта"
+                    label="Тип Соревнования"
                     select
                     name="sport_type"
                     value={localFilters.sport_type}
@@ -206,7 +206,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                 </TextField>
 
                 <TextField
-                    label="Соревнование"
+                    label="Вид спорта"
                     select
                     name="competition"
                     value={localFilters.competition}
