@@ -40,6 +40,7 @@ def save_event_to_db(event_data):
 
         # Формируем данные для сохранения
         event, created = Event.objects.update_or_create(
+            id=event_data["id"],
             title=event_data["name"],
             sport_type=sport_type,
             competition=competition,

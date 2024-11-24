@@ -97,9 +97,9 @@ const StatisticsPage: React.FC = () => {
                         <TopEventsByParticipants data={data.topCompetitionByParticipants} />
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
-                        <AgeStatistics data={data.ageData} />
-                    </Grid>
+                    {/*<Grid item xs={12} md={6}>*/}
+                    {/*    <AgeStatistics data={data.ageData} />*/}
+                    {/*</Grid>*/}
                 </Grid>
             )}
         </Container>

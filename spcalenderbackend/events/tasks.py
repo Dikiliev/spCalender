@@ -22,7 +22,7 @@ def fetch_and_process_data():
         if paths:
             last_path = paths[0]
             print('last_link:', last_path)
-            data = extract_data_from_pdf(last_path, 40)
+            data = extract_data_from_pdf(last_path, -1)
 
             if data:
                 for event_data in data:
@@ -33,7 +33,7 @@ def fetch_and_process_data():
             print("Ссылки не найдены.")
     except Exception as e:
         print(f"Ошибка при выполнении fetch_and_process_data: {e}")
-    time.sleep(30)
+    time.sleep(6 * 60 * 60)
 
 def delete_old_jobs(max_age=604_800):
     """
@@ -51,7 +51,7 @@ def start_scheduler():
     # Задача запускается каждые 6 часов
     scheduler.add_job(
         fetch_and_process_data,
-        trigger=IntervalTrigger(hours=5),
+        trigger=IntervalTrigger(seconds=6),
         id="fetch_and_process_data",
         max_instances=1,
         replace_existing=True,
