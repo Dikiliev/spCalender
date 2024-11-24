@@ -1,13 +1,13 @@
 // src/pages/ProfilePage.tsx
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Avatar, CircularProgress, Alert } from '@mui/material';
-import FlexBox from '@components/flexBox/FlexBox';
+import { TextField, Button, Typography, CircularProgress, Alert, Paper} from '@mui/material';
 import {useUser} from "@hooks/useUser";
 
 interface FormData {
     username: string;
     first_name: string;
     last_name: string;
+    email: string;
     phone_number: string;
     avatar: File | string | null;
     avatarPreview: string | null;
@@ -17,6 +17,7 @@ const ProfilePage: React.FC = () => {
     const { user, updateUser, error, isUpdating } = useUser();
     const [formData, setFormData] = useState<FormData>({
         username: '',
+        email: '',
         first_name: '',
         last_name: '',
         phone_number: '',
@@ -28,6 +29,7 @@ const ProfilePage: React.FC = () => {
         if (user) {
             setFormData({
                 username: user.username,
+                email: user.email,
                 first_name: user.first_name || '',
                 last_name: user.last_name || '',
                 phone_number: user.phone_number || '',
@@ -53,6 +55,7 @@ const ProfilePage: React.FC = () => {
     const handleCancel = () => {
         setFormData({
             username: user?.username || '',
+            email: user?.email || '',
             first_name: user?.first_name || '',
             last_name: user?.last_name || '',
             phone_number: user?.phone_number || '',
@@ -70,6 +73,10 @@ const ProfilePage: React.FC = () => {
             }
         });
 
+        if (formData.avatar instanceof String){
+            formData.avatar = null;
+        }
+
         await updateUser(formDataToSend);
         if (formData.avatarPreview && formData.avatar instanceof File) {
             URL.revokeObjectURL(formData.avatarPreview); // Очищаем временный URL
@@ -77,21 +84,22 @@ const ProfilePage: React.FC = () => {
     };
 
     return (
-        <Box component='form' onSubmit={handleSubmit} sx={{ maxWidth: 500, margin: 'auto', mt: 5, p: 2 }}>
+        <Paper component='form' onSubmit={handleSubmit} sx={{ maxWidth: 500, margin: 'auto', mt: 5, p: 4 }}>
             <Typography variant='h5' gutterBottom>
                 Профиль
             </Typography>
             {error && <Alert severity='error'>{error.message}</Alert>}
-            <FlexBox flexDirection={'column'} gap={1}>
-                <Avatar src={(formData.avatarPreview as string) || ''} sx={{ width: 128, height: 128 }} />
-                <label htmlFor='icon-button-file'>
-                    <Button color='primary' size='small' component='span'>
-                        Загрузить новое фото
-                    </Button>
-                    <input type='file' id='icon-button-file' style={{ display: 'none' }} onChange={handleAvatarChange} accept='image/*' />
-                </label>
-            </FlexBox>
+            {/*<FlexBox flexDirection={'column'} gap={1}>*/}
+            {/*    <Avatar src={(formData.avatarPreview as string) || ''} sx={{ width: 128, height: 128 }} />*/}
+            {/*    <label htmlFor='icon-button-file'>*/}
+            {/*        <Button color='primary' size='small' component='span'>*/}
+            {/*            Загрузить новое фото*/}
+            {/*        </Button>*/}
+            {/*        <input type='file' id='icon-button-file' style={{ display: 'none' }} onChange={handleAvatarChange} accept='image/*' />*/}
+            {/*    </label>*/}
+            {/*</FlexBox>*/}
             <TextField name='username' label='Имя пользователя' fullWidth margin='normal' value={formData.username} onChange={handleChange} />
+            <TextField name='email' label='Почта' fullWidth margin='normal' value={formData.email} onChange={handleChange} />
             <TextField name='first_name' label='Имя' fullWidth margin='normal' value={formData.first_name} onChange={handleChange} />
             <TextField name='last_name' label='Фамилия' fullWidth margin='normal' value={formData.last_name} onChange={handleChange} />
             <TextField name='phone_number' label='Номер телефона' fullWidth margin='normal' value={formData.phone_number} onChange={handleChange} />
@@ -102,7 +110,7 @@ const ProfilePage: React.FC = () => {
             <Button variant='text' color='error' fullWidth sx={{ mt: 1 }} onClick={handleCancel} disabled={isUpdating}>
                 Отменить
             </Button>
-        </Box>
+        </Paper>
     );
 };
 
