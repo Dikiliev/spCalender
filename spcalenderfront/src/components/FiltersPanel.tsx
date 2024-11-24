@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
-import { Typography, TextField, MenuItem, Button, Stack, Paper } from '@mui/material';
-import { IFilters } from '@src/types/events';
-import SortBy from '@components/SortBy';
-import ParticipantsFilter from '@components/ParticipantsFilter';
+import React, { useState, useEffect } from 'react';
+import {
+    Typography,
+    TextField,
+    MenuItem,
+    Button,
+    Stack,
+    Paper,
+    CircularProgress,
+} from '@mui/material';
+import { fetchSportTypes, fetchCompetitions } from '@api/events';
+import {ICompetitionType, IFilters, ISportType} from "types/events";
+import SortBy from "@components/SortBy";
+import ParticipantsFilter from "@components/ParticipantsFilter";
 
 interface FiltersPanelProps {
     onApplyFilters: (filters: IFilters) => void;
     onResetFilters: () => void;
 }
 
+
 const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilters }) => {
     const [localFilters, setLocalFilters] = useState({
-        sportType: '',
+        sport_type: '',
+        competition: '',
         location: '',
         participantsMin: '',
         participantsMax: '',
@@ -20,23 +31,32 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
         period: '',
         duration: '',
         customDuration: '',
-        startDate: '',
-        endDate: '',
-        ordering: '', // Для сортировки
+        start_date_after: '',
+        start_date_before: '',
+        ordering: '',
     });
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+    const [sportTypes, setSportTypes] = useState<ISportType[]>([]);
+    const [competitions, setCompetitions] = useState<ICompetitionType[]>([]);
 
-        setLocalFilters((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+    const [loading, setLoading] = useState<boolean>(true);
 
-        if (name === 'period') {
-            calculateDatesFromPeriod(value);
-        }
-    };
+    useEffect(() => {
+        const loadFilters = async () => {
+            try {
+                const sportTypeData = await fetchSportTypes(); // Fetch спорт-типы
+                const competitionData = await fetchCompetitions(); // Fetch соревнования
+                setSportTypes(sportTypeData); // Устанавливаем список спорт-типов
+                setCompetitions(competitionData); // Устанавливаем список соревнований
+            } catch (error) {
+                console.error('Error loading filters:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadFilters();
+    }, []);
 
     const calculateDatesFromPeriod = (period: string) => {
         const today = new Date();
@@ -60,8 +80,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
 
         setLocalFilters((prev) => ({
             ...prev,
-            startDate,
-            endDate,
+            start_date_after: startDate,
+            start_date_before: endDate,
         }));
     };
 
@@ -78,13 +98,13 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
         // Преобразование длительности
         if (duration === 'custom' && customDuration) {
             const days = Number(customDuration);
-            if (localFilters.startDate) {
+            if (localFilters.start_date_after) {
                 const endDate = new Date(
-                    new Date(localFilters.startDate).getTime() + days * 24 * 60 * 60 * 1000
+                    new Date(localFilters.start_date_after).getTime() + days * 24 * 60 * 60 * 1000
                 )
                     .toISOString()
                     .split('T')[0];
-                serverFilters.endDate = endDate;
+                serverFilters.start_date_before = endDate;
             }
         }
 
@@ -95,10 +115,42 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
         } as IFilters;
     };
 
+
+
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+
+        setLocalFilters((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        if (name === 'period') {
+            calculateDatesFromPeriod(value);
+        }
+    };
+
     const handleApplyFilters = () => {
         const filtersForServer = transformFilters();
         onApplyFilters(filtersForServer);
     };
+
+    if (loading) {
+        return (
+            <Paper
+                sx={{
+                    width: 300,
+                    p: 2,
+                    ml: 2,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <CircularProgress />
+            </Paper>
+        );
+    }
 
     return (
         <Paper
@@ -119,17 +171,48 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                 <TextField
                     label="Вид спорта"
                     select
-                    name="sportType"
-                    value={localFilters.sportType}
+                    name="sport_type"
+                    value={localFilters.sport_type}
                     onChange={handleFilterChange}
                     variant="outlined"
                     size="small"
                 >
                     <MenuItem value="">Все виды спорта</MenuItem>
-                    <MenuItem value="basketball">Баскетбол</MenuItem>
-                    <MenuItem value="swimming">Плавание</MenuItem>
-                    <MenuItem value="football">Футбол</MenuItem>
+                    {sportTypes.map((type) => (
+                        <MenuItem key={type.id} value={type.id}>
+                            {type.name}
+                        </MenuItem>
+                    ))}
                 </TextField>
+
+                <TextField
+                    label="Соревнование"
+                    select
+                    name="competition"
+                    value={localFilters.competition}
+                    onChange={handleFilterChange}
+                    variant="outlined"
+                    size="small"
+                >
+                    <MenuItem value="">Все соревнования</MenuItem>
+                    {competitions.map((competition, index) => (
+                        <MenuItem key={index} value={competition.id}>
+                            {competition.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
+                {localFilters.duration === 'custom' && (
+                    <TextField
+                        label="Длительность (в днях)"
+                        type="number"
+                        name="customDuration"
+                        value={localFilters.customDuration}
+                        onChange={handleFilterChange}
+                        variant="outlined"
+                        size="small"
+                    />
+                )}
 
                 <TextField
                     label="Местоположение"
@@ -155,34 +238,23 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                     <MenuItem value="week">Текущая неделя</MenuItem>
                 </TextField>
 
-                <TextField
-                    label="Длительность"
-                    select
-                    name="duration"
-                    value={localFilters.duration}
-                    onChange={handleFilterChange}
-                    variant="outlined"
-                    size="small"
-                >
-                    <MenuItem value="">Выберите длительность</MenuItem>
-                    <MenuItem value="1">1 день</MenuItem>
-                    <MenuItem value="3">3 дня</MenuItem>
-                    <MenuItem value="7">Неделя</MenuItem>
-                    <MenuItem value="30">Месяц</MenuItem>
-                    <MenuItem value="custom">Другое</MenuItem>
-                </TextField>
+                {/*<TextField*/}
+                {/*    label="Длительность"*/}
+                {/*    select*/}
+                {/*    name="duration"*/}
+                {/*    value={localFilters.duration}*/}
+                {/*    onChange={handleFilterChange}*/}
+                {/*    variant="outlined"*/}
+                {/*    size="small"*/}
+                {/*>*/}
+                {/*    <MenuItem value="">Выберите длительность</MenuItem>*/}
+                {/*    <MenuItem value="1">1 день</MenuItem>*/}
+                {/*    <MenuItem value="3">3 дня</MenuItem>*/}
+                {/*    <MenuItem value="7">Неделя</MenuItem>*/}
+                {/*    <MenuItem value="30">Месяц</MenuItem>*/}
+                {/*    <MenuItem value="custom">Другое</MenuItem>*/}
+                {/*</TextField>*/}
 
-                {localFilters.duration === 'custom' && (
-                    <TextField
-                        label="Длительность (в днях)"
-                        type="number"
-                        name="customDuration"
-                        value={localFilters.customDuration}
-                        onChange={handleFilterChange}
-                        variant="outlined"
-                        size="small"
-                    />
-                )}
 
                 <ParticipantsFilter
                     participantsMin={localFilters.participantsMin}
@@ -191,6 +263,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                 />
 
                 <SortBy value={localFilters.ordering} onChange={handleFilterChange} />
+
 
                 <Button variant="contained" onClick={handleApplyFilters} fullWidth>
                     Применить
@@ -203,4 +276,4 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
     );
 };
 
-export default FiltersPanel;
+export default FiltersPanel

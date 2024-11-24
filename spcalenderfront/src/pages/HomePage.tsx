@@ -19,15 +19,17 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import { useInView } from 'react-intersection-observer';
 import theme from '@styles/theme';
+import {IFilters} from "types/events";
 
 const FILTERS_STORAGE_KEY = 'user_event_filters';
 
 const HomePage: React.FC = () => {
     const [filters, setFilters] = useState(() => {
         return loadFromStorage(FILTERS_STORAGE_KEY) || {
-            sportType: '',
-            startDate: '',
-            endDate: '',
+            sport_type: '',
+            competition: '',
+            start_date_after: '',
+            start_date_before: '',
             location: '',
             participantsMin: undefined,
             participantsMax: undefined,
@@ -35,7 +37,7 @@ const HomePage: React.FC = () => {
             ageGroup: '',
             isCancelled: undefined,
             ordering: '',
-        };
+        } as IFilters;
     });
 
     const [isFiltersOpen, setFiltersOpen] = useState(false);
@@ -75,9 +77,9 @@ const HomePage: React.FC = () => {
 
     const resetFilters = () => {
         setFilters({
-            sportType: '',
-            startDate: '',
-            endDate: '',
+            sport_type: '',
+            start_date_after: '',
+            start_date_before: '',
             location: '',
             participantsMin: undefined,
             participantsMax: undefined,

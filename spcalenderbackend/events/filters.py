@@ -1,21 +1,35 @@
 from django_filters import rest_framework as filters
-from .models import Event, SportType
+from .models import Event, SportType, CompetitionType
 
 
 class EventFilter(filters.FilterSet):
-    start_date = filters.DateFromToRangeFilter(field_name='start_date', label='Дата начала')
-    end_date = filters.DateFromToRangeFilter(field_name='end_date', label='Дата окончания')
-
+    start_date = filters.DateFromToRangeFilter(
+        field_name='start_date',
+        label='Дата начала'
+    )
+    end_date = filters.DateFromToRangeFilter(
+        field_name='end_date',
+        label='Дата окончания'
+    )
     participants_after = filters.NumberFilter(
         field_name='participants', lookup_expr='gte', label='Минимальное количество участников'
     )
     participants_before = filters.NumberFilter(
         field_name='participants', lookup_expr='lte', label='Максимальное количество участников'
     )
-    sport_type = filters.ModelMultipleChoiceFilter(
+
+    sport_type = filters.ModelChoiceFilter(
         queryset=SportType.objects.all(),
         label='Тип спорта',
         to_field_name='id',
+        field_name='sport_type',  # Поле модели Event
+    )
+
+    competition = filters.ModelChoiceFilter(
+        queryset=CompetitionType.objects.all(),
+        label='Тип соревнования',
+        to_field_name='id',
+        field_name='competition',
     )
 
     gender = filters.ChoiceFilter(choices=Event.GENDER_CHOICES, label='Пол')

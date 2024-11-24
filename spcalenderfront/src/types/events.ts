@@ -30,10 +30,10 @@ export interface IEvent {
 }
 
 export interface IFilters {
-    sportType?: string[]; // Изменено на массив
+    sport_type?: string[]; // Изменено на массив
     competition?: string[]; // Изменено на массив
-    startDate?: string; // ISO-формат даты
-    endDate?: string; // ISO-формат даты
+    start_date_after?: string; // ISO-формат даты
+    start_date_before?: string; // ISO-формат даты
     country?: string;
     region?: string;
     city?: string;

@@ -1,4 +1,4 @@
-import { IEvent, IFilters } from '@src/types/events';
+import {ICompetitionType, IEvent, IFilters, ISportType} from '@src/types/events';
 import apiInstance from '@src/api/apiInstance';
 import {PaginatedResponse} from "types/common";
 
@@ -23,6 +23,8 @@ export const fetchEvents = async (filters: Partial<IFilters>): Promise<IEvent[]>
 export const fetchAllEvents = async (page: number, filters: IFilters): Promise<PaginatedResponse<IEvent>> => {
     const params = new URLSearchParams({ page: page.toString() });
 
+    console.log(filters);
+
     Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== '') {
             if (key === 'participantsMin') {
@@ -45,4 +47,16 @@ export const fetchAllEvents = async (page: number, filters: IFilters): Promise<P
         console.error('Error fetching events:', error);
         throw new Error('Failed to fetch events');
     }
+};
+
+
+export const fetchSportTypes = async (): Promise<ISportType[]> => {
+    const response = await apiInstance.get('/events/sport-types/');
+    return response.data;
+};
+
+export const fetchCompetitions = async (): Promise<ICompetitionType[]> => {
+    const response = await apiInstance.get('/events/competitions/');
+    console.log(response.data);
+    return response.data;
 };

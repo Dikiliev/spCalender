@@ -1,9 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Event
+from .models import Event, SportType, CompetitionType
 from .serializers import EventSerializer
 from .filters import EventFilter
 from rest_framework.generics import ListAPIView
@@ -20,13 +21,29 @@ class EventListView(ListAPIView):
     search_fields = ['title', 'description', 'location']
     ordering_fields = ['start_date', 'end_date', 'participants']
 
-    ordering = ['start_date']
+    ordering = ['-start_date']
 
     def get_queryset(self):
         qs = super().get_queryset()
         print(f"GET params: {self.request.GET}")  # Посмотрите, какие параметры приходят
         print(f"Filtered queryset: {qs.query}")  # Убедитесь, что фильтры применились
         return qs
+
+class SportTypeListView(APIView):
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get(self, request):
+        sport_types = SportType.objects.all().values('id', 'name')
+        return Response(sport_types)
+
+class CompetitionListView(APIView):
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get(self, request):
+        competitions = CompetitionType.objects.all().values('id', 'name')
+        return Response(competitions)
 
 
 class StatisticsView(APIView):

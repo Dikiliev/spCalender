@@ -14,9 +14,9 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
 
     const resetFilters = () => {
         onFiltersChange({
-            sportType: '',
-            startDate: '',
-            endDate: '',
+            sport_type: '',
+            start_date_after: '',
+            start_date_before: '',
             location: '',
             participantsMin: undefined,
             participantsMax: undefined,
@@ -35,7 +35,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         label="Вид спорта"
                         select
                         name="sportType"
-                        value={filters.sportType || ''}
+                        value={filters.sport_type || ''}
                         onChange={handleFilterChange}
                         variant="outlined"
                         size="small"
@@ -51,7 +51,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         label="Дата начала"
                         type="date"
                         name="startDate"
-                        value={filters.startDate || ''}
+                        value={filters.start_date_after || ''}
                         onChange={handleFilterChange}
                         variant="outlined"
                         size="small"
@@ -62,7 +62,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({ filters, onFiltersChange })
                         label="Дата окончания"
                         type="date"
                         name="endDate"
-                        value={filters.endDate || ''}
+                        value={filters.start_date_before || ''}
                         onChange={handleFilterChange}
                         variant="outlined"
                         size="small"
