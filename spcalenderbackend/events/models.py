@@ -17,16 +17,16 @@ class Event(models.Model):
 
     title = models.CharField(max_length=255)
     sport_type = models.ForeignKey(SportType, on_delete=models.CASCADE)
-    country = models.CharField(max_length=100, default='')
-    region = models.CharField(max_length=100, default='')
-    city = models.CharField(max_length=100, default='')
-    location = models.CharField(max_length=255, default='')
+    country = models.CharField(max_length=150, default='')
+    region = models.CharField(max_length=150, default='')
+    city = models.CharField(max_length=150, default='')
+    location = models.TextField(default='')
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     participants = models.PositiveIntegerField()
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    age_group = models.CharField(max_length=50)
-    event_type = models.CharField(max_length=50)  # e.g., 'Championship', 'Cup'
+    gender = models.TextField(choices=GENDER_CHOICES)
+    age_group = models.CharField(max_length=150)
+    event_type = models.CharField(max_length=150)  # e.g., 'Championship', 'Cup'
     description = models.TextField(blank=True, null=True)
     program = models.TextField(blank=True, null=True)  # Новое поле для дисциплины/программы
     is_cancelled = models.BooleanField(default=False)

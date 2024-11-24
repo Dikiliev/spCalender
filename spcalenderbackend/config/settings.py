@@ -25,7 +25,21 @@ AUTH_USER_MODEL = 'users.User'
 EMAIL_HOST_USER = 'sporttimeevent@mail.ru'
 EMAIL_HOST_PASSWORD = 'R@mzan228'
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django_apscheduler': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
 
 
 INSTALLED_APPS = [
@@ -42,6 +56,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
 
+    'django_apscheduler',
+
     # 'jet_django',
 
     # 'base.apps.BaseConfig',
@@ -51,6 +67,7 @@ INSTALLED_APPS = [
     # 'products.apps.ProductsConfig',
     # 'orders.apps.OrdersConfig',
     # 'community.apps.CommunityConfig',
+
 ]
 
 # JET_PROJECT = 'estechpc'

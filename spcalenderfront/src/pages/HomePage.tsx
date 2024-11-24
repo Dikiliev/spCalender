@@ -7,7 +7,6 @@ import {
     IconButton,
     Drawer,
     useMediaQuery,
-    Button,
 } from '@mui/material';
 import { useEvents } from '@src/hooks/useEvents';
 import { IFilters } from '@src/types/events';
