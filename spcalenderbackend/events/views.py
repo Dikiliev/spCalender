@@ -22,6 +22,12 @@ class EventListView(ListAPIView):
 
     ordering = ['start_date']
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        print(f"GET params: {self.request.GET}")  # Посмотрите, какие параметры приходят
+        print(f"Filtered queryset: {qs.query}")  # Убедитесь, что фильтры применились
+        return qs
+
 
 class StatisticsView(APIView):
     def get(self, request):

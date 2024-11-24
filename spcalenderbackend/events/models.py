@@ -8,6 +8,12 @@ class SportType(models.Model):
         return self.name
 
 
+class CompetitionType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Event(models.Model):
     GENDER_CHOICES = [
         ('male', 'Male'),
@@ -17,6 +23,7 @@ class Event(models.Model):
 
     title = models.CharField(max_length=255)
     sport_type = models.ForeignKey(SportType, on_delete=models.CASCADE)
+    competition = models.ForeignKey(CompetitionType, on_delete=models.CASCADE)
     country = models.CharField(max_length=150, default='')
     region = models.CharField(max_length=150, default='')
     city = models.CharField(max_length=150, default='')
