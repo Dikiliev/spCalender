@@ -23,10 +23,35 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
 
+    const formatDateForGoogle = (date: string) =>
+        new Date(date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+    const generateGoogleCalendarLink = () => {
+        const startDate = formatDateForGoogle(event.start_date);
+        const endDate = formatDateForGoogle(event.end_date);
+        const details = [
+            `https://calendar.google.com/calendar/render?action=TEMPLATE`,
+            `text=${encodeURIComponent(event.title)}`,
+            `dates=${startDate}/${endDate}`,
+            `details=${encodeURIComponent(event.description || '')}`,
+            `location=${encodeURIComponent(event.location || '')}`,
+            `sf=true`,
+            `output=xml`,
+        ];
+        return details.join('&');
+    };
+
     return (
         <>
             <Card sx={{ height: '100%' }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+                <CardContent
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        height: '100%',
+                    }}
+                >
                     <Typography variant="h6" fontWeight="bold" mb={1}>
                         {event.title}
                     </Typography>
@@ -75,8 +100,12 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                     </Box>
 
                     <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                        <Button size="small" variant="outlined">
-                            Подробнее
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => window.open(generateGoogleCalendarLink(), '_blank')}
+                        >
+                            Добавить в Google Календарь
                         </Button>
                         <IconButton color="primary" onClick={handleOpenModal}>
                             <NotificationsNoneIcon />
