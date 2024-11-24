@@ -12,6 +12,8 @@ import { fetchSportTypes, fetchCompetitions } from '@api/events';
 import {ICompetitionType, IFilters, ISportType} from "types/events";
 import SortBy from "@components/SortBy";
 import ParticipantsFilter from "@components/ParticipantsFilter";
+import {loadFromStorage} from "@utils/storage";
+import {FILTERS_STORAGE_KEY} from "@pages/HomePage";
 
 interface FiltersPanelProps {
     onApplyFilters: (filters: IFilters) => void;
@@ -20,26 +22,44 @@ interface FiltersPanelProps {
 
 
 const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilters }) => {
-    const [localFilters, setLocalFilters] = useState({
-        sport_type: '',
-        competition: '',
-        location: '',
-        participantsMin: '',
-        participantsMax: '',
-        gender: '',
-        ageGroup: '',
-        period: '',
-        duration: '',
-        customDuration: '',
-        start_date_after: '',
-        start_date_before: '',
-        ordering: '',
+
+    const [localFilters, setLocalFilters] = useState(() => {
+        return loadFromStorage(FILTERS_STORAGE_KEY) || {
+            sport_type: '',
+            competition: '',
+            start_date_after: '',
+            start_date_before: '',
+            location: '',
+            participantsMin: undefined,
+            participantsMax: undefined,
+            gender: undefined,
+            ageGroup: '',
+            isCancelled: undefined,
+            ordering: '',
+        } as IFilters;
     });
 
     const [sportTypes, setSportTypes] = useState<ISportType[]>([]);
     const [competitions, setCompetitions] = useState<ICompetitionType[]>([]);
 
     const [loading, setLoading] = useState<boolean>(true);
+
+    const resetFilters = () => {
+        setLocalFilters({
+            sport_type: '',
+            start_date_after: '',
+            start_date_before: '',
+            location: '',
+            participantsMin: undefined,
+            participantsMax: undefined,
+            gender: undefined,
+            ageGroup: '',
+            isCancelled: undefined,
+            ordering: '',
+        } as IFilters);
+
+        onResetFilters();
+    };
 
     useEffect(() => {
         const loadFilters = async () => {
@@ -292,7 +312,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({ onApplyFilters, onResetFilt
                 <Button variant="contained" onClick={handleApplyFilters} fullWidth>
                     Применить
                 </Button>
-                <Button variant="outlined" onClick={onResetFilters} fullWidth>
+                <Button variant="outlined" onClick={resetFilters} fullWidth>
                     Сбросить
                 </Button>
             </Stack>

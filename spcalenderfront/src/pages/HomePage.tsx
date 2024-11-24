@@ -21,7 +21,7 @@ import { useInView } from 'react-intersection-observer';
 import theme from '@styles/theme';
 import {IFilters} from "types/events";
 
-const FILTERS_STORAGE_KEY = 'user_event_filters';
+export const FILTERS_STORAGE_KEY = 'user_event_filters';
 
 const HomePage: React.FC = () => {
     const [filters, setFilters] = useState(() => {
@@ -120,7 +120,11 @@ const HomePage: React.FC = () => {
 
             {/* Боковая панель фильтров */}
             {!isMobile ? (
-                <FiltersPanel onApplyFilters={setFilters} onResetFilters={resetFilters} />
+                <FiltersPanel
+                    filters={filters}
+                    onApplyFilters={setFilters}
+                    onResetFilters={resetFilters}
+                />
             ) : (
                 <>
                     <IconButton
@@ -153,7 +157,12 @@ const HomePage: React.FC = () => {
                                 <CloseIcon />
                             </IconButton>
                         </Box>
-                        <FiltersPanel onApplyFilters={setFilters} onResetFilters={resetFilters} />
+                        <FiltersPanel
+                            filters={filters}
+                            onApplyFilters={setFilters}
+                            onResetFilters={resetFilters}
+                        />
+
                     </Drawer>
                 </>
             )}
