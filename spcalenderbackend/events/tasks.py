@@ -51,7 +51,7 @@ def start_scheduler():
     # Задача запускается каждые 6 часов
     scheduler.add_job(
         fetch_and_process_data,
-        trigger=IntervalTrigger(seconds=6),
+        trigger=IntervalTrigger(hours=6),
         id="fetch_and_process_data",
         max_instances=1,
         replace_existing=True,
